@@ -8,3 +8,5 @@ Simple example how create Java model with CRUD operation using mybatis-generator
 
 ## Useful links
 * http://www.mybatis.org/generator/
+* https://gist.github.com/user20161119/f7e5d69b66834c105cff
+* http://www.henryxi.com/mybatis-generator-maven-example 
