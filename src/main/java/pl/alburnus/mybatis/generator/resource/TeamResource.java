@@ -25,7 +25,12 @@ public class TeamResource {
 
     @GetMapping("/team")
     public List<Team> getAllTeam() {
-        return teamMapper.selectByExample(new TeamExample());
+        TeamExample teamExample = new TeamExample();
+        teamExample.setOrderByClause("id desc");
+        teamExample.createCriteria()
+                .andIdNotEqualTo(2)
+                .andNameNotEqualTo("TEAM C");
+        return teamMapper.selectByExample(teamExample);
     }
 
     @PostMapping("/team")
@@ -36,6 +41,13 @@ public class TeamResource {
     @GetMapping("/teammate")
     public List<Teammate> getAllTeammate() {
         return teammateMapper.selectByExample(new TeammateExample());
+    }
+
+    @GetMapping("/teammate/{nameLike}")
+    public List<Teammate> getAllTeammate(@PathVariable("nameLike") String nameLike) {
+        TeammateExample teammate = new TeammateExample();
+        teammate.createCriteria().andNameLike("%" + nameLike + "%");
+        return teammateMapper.selectByExample(teammate);
     }
 
     @PostMapping("/teammate")
