@@ -3,50 +3,67 @@
         "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
+    <!-- Configuration manual
+         http://www.mybatis.org/generator/configreference/xmlconfig.html
+    -->
 
-    <!-- Properties file to get parameters value -->
+    <!-- Properties file - set external properties file -->
     <properties resource="application.properties" />
 
-    <!-- !!!! Driver Class Path !!!! -->
+    <!-- path do jdbc driver  -->
     <classPathEntry location="src\main\resources\postgresql-42.2.5.jar"/>
 
+    <!-- The <context> element is used to specify the environment for generating a set of objects
+         In configuration can be multiple <context> elements for generating objects from different databases
+    -->
     <context id="context" targetRuntime="MyBatis3">
         <commentGenerator>
-            <property name="suppressAllComments" value="false"/>
-            <property name="suppressDate" value="true"/>
+            <!-- http://www.mybatis.org/generator/configreference/commentGenerator.html -->
+            <property name="suppressAllComments" value="false"/> <!-- All generated elements will include comments  -->
+            <property name="suppressDate" value="true"/> <!-- Include in generated comments timestamp - if set to false-->
         </commentGenerator>
 
-        <!-- !!!! Database Configurations !!!! -->
+        <!-- Database Configurations -->
+        <!-- Context need one jdbcConntection or connectionFactory to obtain the database connection required to introspect tables-->
         <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="${spring.datasource.url}" userId="${spring.datasource.username}" password="${spring.datasource.password}"/>
 
+        <!-- http://www.mybatis.org/generator/configreference/javaTypeResolver.html -->
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <!-- !!!! Model Configurations !!!! -->
+        <!-- http://www.mybatis.org/generator/configreference/javaModelGenerator.html -->
+        <!-- builds primary key classes, record classes, and Query by Example classes -->
         <javaModelGenerator targetPackage="pl.alburnus.mybatis.generator.entity" targetProject="src/main/java">
+            <!-- generate different Java packages for the objects based on the catalog and schema -->
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <!-- !!!! Mapper XML Configurations !!!! -->
-        <sqlMapGenerator targetPackage="pl.alburnus.mybatis.generator.mapper" targetProject="src/main/resources">
-            <property name="enableSubPackages" value="false"/>
-        </sqlMapGenerator>
+        <!--Need only if in javaClientenerator chose XMLMAPPER -->
+        <!--<sqlMapGenerator targetPackage="pl.alburnus.mybatis.generator.mapper" targetProject="src/main/resources">-->
+            <!--<property name="enableSubPackages" value="false"/>-->
+        <!--</sqlMapGenerator>-->
 
-        <!-- !!!! Mapper Interface Configurations !!!! -->
-        <javaClientGenerator targetPackage="pl.alburnus.mybatis.generator.mapper" targetProject="src/main/java" type="XMLMAPPER">
+        <!-- http://www.mybatis.org/generator/configreference/javaClientGenerator.html -->
+        <!-- Create interfaces and classes that allow easy use of the generated Java model and mappers-->
+        <javaClientGenerator targetPackage="pl.alburnus.mybatis.generator.mapper" targetProject="src/main/java" type="ANNOTATEDMAPPER"> <!--XMLMAPPER-->
+            <!-- generate different Java packages for the objects based on the catalog and schema -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <!-- !!!! Table Configurations !!!! -->
-        <table tableName="team" domainObjectName="Team">
+        <!-- http://www.mybatis.org/generator/configreference/table.html -->
+        <!-- for this table won't create method to delete by primary key -->
+        <table tableName="team" domainObjectName="Team" enableDeleteByPrimaryKey="false">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <property name="modelOnly" value="false"/>
+            <!-- http://www.mybatis.org/generator/configreference/generatedKey.html -->
+            <generatedKey column="id" sqlStatement="JDBC"/> <!-- JDBC is a database independent-->
         </table>
-        <table tableName="teammate" domainObjectName="TeamMate">
+        <table tableName="teammate" domainObjectName="Teammate">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <property name="modelOnly" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
     </context>
 </generatorConfiguration>
